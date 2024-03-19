@@ -1,0 +1,6 @@
+#CLion related files
+.idea/
+
+#Build folder
+bin
+build
