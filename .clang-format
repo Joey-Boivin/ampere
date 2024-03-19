@@ -1,0 +1,32 @@
+IndentWidth: 8
+TabWidth: 8
+ColumnLimit: 120
+AlignConsecutiveDeclarations:
+  Enabled: true
+AlignConsecutiveAssignments:
+  Enabled: true
+
+AlignAfterOpenBracket: true
+
+AlwaysBreakAfterReturnType: AllDefinitions
+
+PointerAlignment: Left
+
+BreakBeforeBraces: Allman
+
+BraceWrapping:
+  AfterControlStatement: true
+  AfterEnum:       true
+  AfterFunction:   true
+  AfterObjCDeclaration: true
+  AfterStruct:     true
+  AfterUnion:      true
+  AfterExternBlock: true
+  BeforeCatch:     true
+  BeforeElse:      true
+  IndentBraces:    false
+
+AlignConsecutiveMacros:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: false
