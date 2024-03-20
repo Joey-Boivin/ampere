@@ -1,6 +1,7 @@
 #CLion related files
 .idea/
+cmake-build-debug
 
-#Build folder
+#Build and bin folders
 bin
 build
