@@ -10,7 +10,7 @@ include_directories(src/wm)
 find_package(X11 REQUIRED)
 include_directories(${X11_INCLUDE_DIR})
 
-add_executable(${PROJECT_NAME} ${SRC_FOLDER}/${PROJECT_NAME}.c ${SRC_FOLDER}/backend/x11/amp_x11_backend.c)
+add_executable(${PROJECT_NAME} ${SRC_FOLDER}/amp.c ${SRC_FOLDER}/backend/x11/amp_x11_backend.c)
 
 target_link_libraries(${PROJECT_NAME} ${X11_LIBRARIES})
 
