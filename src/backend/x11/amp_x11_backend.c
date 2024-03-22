@@ -1,5 +1,5 @@
 #include "amp_backend.h"
-#include "amp_backend_message.h"
+#include "amp_backend_event.h"
 #include "amp_wm.h"
 
 #include <X11/Xlib.h>
@@ -54,13 +54,18 @@ amp_backend_connect(void)
         _amp_backend_x11_try_connect(backend);
         backend->connected = true;
 
-        struct amp_backend_message_ready ready = {
+        struct amp_backend_event_ready ready = {
             .display_width  = XDisplayWidth(backend->display, backend->default_screen),
             .display_height = XDisplayHeight(backend->display, backend->default_screen),
         };
-        struct amp_backend_message message = {
-            .message_type = MESSAGE_BACKEND_READY, .window_id = backend->root_window, .message.ready_message = ready};
-        amp_wm_push_message(&message);
+
+        struct amp_backend_event event = {
+            .event_type = EVENT_BACKEND_READY,
+            .window_id = backend->root_window,
+            .event.ready_event = ready
+        };
+
+        amp_wm_push_message(&event);
 
         return backend;
 }
@@ -84,13 +89,6 @@ amp_backend_start(struct amp_backend* backend)
         }
 
         return 0;
-}
-
-void
-amp_backend_disconnect(struct amp_backend* backend)
-{
-        XCloseDisplay(backend->display);
-        free(backend);
 }
 
 static int
@@ -126,14 +124,14 @@ static void
 _amp_backend_x11_handle_key_press(XEvent* evt)
 {
         printf("[AMPERE X11 BACKEND]: Key pressed\n");
-        struct amp_backend_message_key_pressed key_pressed = {.key_code     = evt->xkey.keycode,
+        struct amp_backend_event_key_pressed key_pressed = {.key_code     = evt->xkey.keycode,
                                                               .modifier_key = evt->xkey.state};
 
-        struct amp_backend_message message = {.message_type                = MESSAGE_KEY_PRESSED,
+        struct amp_backend_event event = {.event_type                = EVENT_KEY_PRESSED,
                                               .window_id                   = evt->xkey.window,
-                                              .message.key_pressed_message = key_pressed};
+                                              .event.key_pressed_event = key_pressed};
 
-        amp_wm_push_message(&message);
+        amp_wm_push_message(&event);
 }
 
 static void
@@ -157,11 +155,11 @@ static void
 _amp_backend_x11_handle_unmap_notify(XEvent* evt)
 {
         printf("[AMPERE X11 BACKEND]: Unmap notify\n");
-        struct amp_backend_message_remove_window remove_window = {.unused = 0};
+        struct amp_backend_event_remove_window remove_window = {.unused = 0};
 
-        struct amp_backend_message message = {.message_type                  = MESSAGE_WINDOW_REMOVE,
+        struct amp_backend_event message = {.event_type                  = EVENT_WINDOW_REMOVED,
                                               .window_id                     = evt->xunmap.window,
-                                              .message.window_remove_message = remove_window};
+                                              .event.window_remove_event = remove_window};
 
         amp_wm_push_message(&message);
 }
@@ -170,11 +168,11 @@ static void
 _amp_backend_x11_handle_map_request(XEvent* evt)
 {
         printf("[AMPERE X11 BACKEND]: Map request\n");
-        struct amp_backend_message_create_window create_window = {.unused = 0};
+        struct amp_backend_event_create_window create_window = {.unused = 0};
 
-        struct amp_backend_message message = {.message_type                  = MESSAGE_WINDOW_CREATE,
+        struct amp_backend_event message = {.event_type                  = EVENT_WINDOW_CREATE,
                                               .window_id                     = evt->xmap.window,
-                                              .message.window_create_message = create_window};
+                                              .event.window_create_event = create_window};
 
         amp_wm_push_message(&message);
 }
