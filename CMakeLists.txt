@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.27)
 project(ampere C)
 
 set(SRC_FOLDER src)
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -Wextra -pedantic")
 
 include_directories(src/wm)

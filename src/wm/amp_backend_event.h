@@ -38,7 +38,7 @@ struct amp_backend_event_remove_window
 struct amp_backend_event
 {
         enum amp_backend_event_type event_type;
-        unsigned long                 window_id;
+        unsigned long               window_id;
         union
         {
                 struct amp_backend_event_ready         ready_event;
