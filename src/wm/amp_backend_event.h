@@ -38,7 +38,7 @@ struct amp_backend_event_remove_window
 
 struct amp_backend_event_focus_in
 {
-    int unused;
+        int unused;
 };
 
 struct amp_backend_event
@@ -51,7 +51,7 @@ struct amp_backend_event
                 struct amp_backend_event_key_pressed   key_pressed_event;
                 struct amp_backend_event_create_window window_create_event;
                 struct amp_backend_event_remove_window window_remove_event;
-                struct amp_backend_event_focus_in focus_in_event;
+                struct amp_backend_event_focus_in      focus_in_event;
         } event;
 };
 #endif // AMP_BACKEND_EVENT
