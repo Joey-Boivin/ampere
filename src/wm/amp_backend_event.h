@@ -11,6 +11,7 @@ enum amp_backend_event_type
         EVENT_KEY_PRESSED,
         EVENT_WINDOW_CREATE,
         EVENT_WINDOW_REMOVED,
+        EVENT_FOCUS_IN
 };
 
 struct amp_backend_event_ready
@@ -35,6 +36,11 @@ struct amp_backend_event_remove_window
         int unused;
 };
 
+struct amp_backend_event_focus_in
+{
+    int unused;
+};
+
 struct amp_backend_event
 {
         enum amp_backend_event_type event_type;
@@ -45,6 +51,7 @@ struct amp_backend_event
                 struct amp_backend_event_key_pressed   key_pressed_event;
                 struct amp_backend_event_create_window window_create_event;
                 struct amp_backend_event_remove_window window_remove_event;
+                struct amp_backend_event_focus_in focus_in_event;
         } event;
 };
 #endif // AMP_BACKEND_EVENT

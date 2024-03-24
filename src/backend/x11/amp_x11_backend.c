@@ -9,7 +9,7 @@
 #include <stdlib.h>
 
 #define ROOT_WINDOW_INPUT_MASK                                                                                         \
-        (SubstructureRedirectMask | SubstructureNotifyMask | KeyPressMask | ButtonPressMask | Mod4Mask | Mod3Mask |    \
+        (SubstructureRedirectMask | SubstructureNotifyMask | KeyPressMask | Mod4Mask | Mod3Mask |    \
          Mod2Mask | Mod1Mask | ControlMask | ShiftMask)
 
 struct amp_backend
@@ -164,26 +164,26 @@ _amp_backend_x11_handle_unmap_notify(XEvent* evt)
                 .unused = 0,
         };
 
-        struct amp_backend_event message = {
+        struct amp_backend_event event = {
                 .event_type                = EVENT_WINDOW_REMOVED,
                 .window_id                 = evt->xunmap.window,
                 .event.window_remove_event = remove_window,
         };
 
-        amp_wm_push_event(&message);
+        amp_wm_push_event(&event);
 }
 
 static void
 _amp_backend_x11_handle_map_request(XEvent* evt)
 {
         printf("[AMPERE X11 BACKEND]: Map request\n");
-        struct amp_backend_event_create_window create_window = { .unused = 0 };
+        struct amp_backend_event_create_window create_window = {.unused = 0,};
 
-        struct amp_backend_event message = {
+        struct amp_backend_event event = {
                 .event_type                = EVENT_WINDOW_CREATE,
                 .window_id                 = evt->xmap.window,
                 .event.window_create_event = create_window,
         };
 
-        amp_wm_push_event(&message);
+        amp_wm_push_event(&event);
 }
