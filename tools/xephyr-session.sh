@@ -5,4 +5,4 @@ Xephyr -br -ac -noreset -screen 800x800 :1 &
 sleep 1
 
 export DISPLAY=:1
-gdb build/ampere
+build/ampere &
