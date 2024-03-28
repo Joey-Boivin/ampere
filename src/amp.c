@@ -13,7 +13,6 @@ static enum log_level level = LOG_INFO;
 #define LOG_FILE "logs.txt"
 #endif
 
-
 int
 main(void)
 {

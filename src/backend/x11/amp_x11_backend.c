@@ -1,7 +1,7 @@
 #include "amp_backend.h"
 #include "amp_backend_event.h"
-#include "amp_wm.h"
 #include "amp_logger.h"
+#include "amp_wm.h"
 
 #include <X11/Xlib.h>
 
