@@ -1,5 +1,6 @@
 #include "amp_backend.h"
 #include "amp_backend_event.h"
+#include "amp_logger.h"
 #include "amp_wm.h"
 
 #include <X11/Xlib.h>
@@ -44,7 +45,7 @@ amp_backend_connect(void)
         backend->display = XOpenDisplay(NULL);
         if (!backend->display)
         {
-                printf("[AMPERE X11 BACKEND]: Could not open X display\n");
+                AMP_LOGGER_ERROR("%s", "Could not open X display");
                 free(backend);
                 exit(EXIT_FAILURE);
         }
@@ -100,12 +101,12 @@ _amp_backend_x11_handle_error(Display* display, XErrorEvent* err)
         {
         case BadAccess:
         {
-                printf("[AMPERE X11 BACKEND]: Another window manager is in control\n");
+                AMP_LOGGER_ERROR("%s", "Another window manager is in control");
                 exit(EXIT_FAILURE);
         }
         default:
         {
-                printf("[AMPERE X11 BACKEND]: Unhandled error (%d)\n", err->error_code);
+                AMP_LOGGER_WARN("Unhandled error (%d)", err->error_code);
         }
         }
 
@@ -124,7 +125,7 @@ _amp_backend_x11_try_connect(const struct amp_backend* backend)
 static void
 _amp_backend_x11_handle_key_press(XEvent* evt)
 {
-        printf("[AMPERE X11 BACKEND]: Key pressed\n");
+        AMP_LOGGER_INFO("%s", "Key pressed");
         struct amp_backend_event_key_pressed key_pressed = {
             .key_code     = evt->xkey.keycode,
             .modifier_key = evt->xkey.state,
@@ -142,7 +143,7 @@ _amp_backend_x11_handle_key_press(XEvent* evt)
 static void
 _amp_backend_x11_handle_configure_request(XEvent* evt)
 {
-        printf("[AMPERE X11 BACKEND]: Configure request\n");
+        AMP_LOGGER_INFO("%s", "Configure request");
         XWindowChanges changes;
         changes.x            = evt->xconfigurerequest.x;
         changes.y            = evt->xconfigurerequest.y;
@@ -159,7 +160,7 @@ _amp_backend_x11_handle_configure_request(XEvent* evt)
 static void
 _amp_backend_x11_handle_unmap_notify(XEvent* evt)
 {
-        printf("[AMPERE X11 BACKEND]: Unmap notify\n");
+        AMP_LOGGER_INFO("%s", "Unmap notify");
         struct amp_backend_event_remove_window remove_window = {
             .unused = 0,
         };
@@ -176,7 +177,7 @@ _amp_backend_x11_handle_unmap_notify(XEvent* evt)
 static void
 _amp_backend_x11_handle_map_request(XEvent* evt)
 {
-        printf("[AMPERE X11 BACKEND]: Map request\n");
+        AMP_LOGGER_INFO("%s", "Map request");
         struct amp_backend_event_create_window create_window = {
             .unused = 0,
         };
