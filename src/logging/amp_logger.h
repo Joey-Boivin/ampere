@@ -15,6 +15,6 @@ enum log_level
 #define AMP_LOGGER_ERROR(...) amp_logger_log(LOG_ERROR, __FILE__, __LINE__, __VA_ARGS__)
 
 void amp_logger_init(enum log_level minimum_level, FILE* file_handle);
-void amp_logger_log(enum log_level, const char* file, int line, const char* format, ...);
+void amp_logger_log(enum log_level level, const char* file, int line, const char* format, ...);
 
 #endif // AMP_LOGGER_H
