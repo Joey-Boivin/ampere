@@ -93,6 +93,12 @@ amp_backend_start(struct amp_backend* backend)
         return 0;
 }
 
+void amp_backend_disconnect(struct amp_backend* backend)
+{
+        XCloseDisplay(backend->display);
+        free(backend);
+}
+
 static int
 _amp_backend_x11_handle_error(Display* display, XErrorEvent* err)
 {
