@@ -16,5 +16,6 @@ enum log_level
 
 void amp_logger_init(enum log_level minimum_level, FILE* file_handle);
 void amp_logger_log(enum log_level level, const char* file, int line, const char* format, ...);
+void amp_logger_close(void);
 
 #endif // AMP_LOGGER_H

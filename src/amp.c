@@ -29,18 +29,8 @@ static void _init_logger(void)
         {
                 amp_logger_init(level, fp);
         }
+        return fp;
 #endif
-}
-
-static void _cleanup(void)
-{
-        amp_backend_disconnect(backend);
-
-#ifndef DEBUG
-        /* Because atexit could use stdout, prevent fclose in DEBUG mode */
-        fclose(fp);
-#endif
-
 }
 
 static bool _should_exit(int signal)
@@ -50,11 +40,9 @@ static bool _should_exit(int signal)
 
 static void _signal_handler(int signal)
 {
-        AMP_LOGGER_INFO("Received signal %d\n", signal);
         if (_should_exit(signal))
         {
-                _cleanup();
-                exit(EXIT_SUCCESS);
+                amp_backend_stop(backend);
         }
 }
 
@@ -62,7 +50,7 @@ static void _init_keyboard_interrupt_signal(const struct sigaction* sa)
 {
     if (sigaction(SIGINT, sa, NULL) < 0)
     {
-        AMP_LOGGER_WARN("Could not initialize keyboard interrupt signal\n");
+            AMP_LOGGER_WARN("Could not initialize keyboard interrupt signal\n");
     }
 }
 
@@ -85,7 +73,6 @@ static void _init_termination_signal(const struct sigaction* sa)
 int
 main(void)
 {
-
         struct sigaction sa;
 
         _init_logger();
@@ -95,9 +82,9 @@ main(void)
         _init_keyboard_interrupt_signal(&sa);
         _init_quit_signal(&sa);
         _init_termination_signal(&sa);
-        while(1);
-        atexit(_cleanup);
 
         backend = amp_backend_connect();
-        amp_backend_start(backend); /* blocking */
+        amp_backend_start(backend); /* blocking until abnormal signal is received */
+        amp_logger_close();
+        return 0;
 }
