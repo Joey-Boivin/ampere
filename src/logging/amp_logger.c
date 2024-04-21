@@ -81,8 +81,8 @@ amp_logger_log(enum log_level level, const char* file, int line, const char* for
 void
 amp_logger_close(void)
 {
-    if (logger.fp != stdout)
-    {
-        fclose(logger.fp);
-    }
+        if (logger.fp != stdout)
+        {
+                fclose(logger.fp);
+        }
 }

@@ -5,20 +5,21 @@
 
 #include <X11/Xlib.h>
 
-#include <stdlib.h>
 #include <signal.h>
+#include <stdlib.h>
 #include <unistd.h>
 
+#define ASYNC_SIGNAL_SAFE volatile sig_atomic_t
 #define ROOT_WINDOW_INPUT_MASK                                                                                         \
         (SubstructureRedirectMask | SubstructureNotifyMask | KeyPressMask | Mod4Mask | Mod3Mask | Mod2Mask |           \
          Mod1Mask | ControlMask | ShiftMask)
 
 struct amp_backend
 {
-        Display* display;
-        Window   root_window;
-        int      default_screen;
-        volatile sig_atomic_t connected;
+        ASYNC_SIGNAL_SAFE connected;
+        Display*          display;
+        Window            root_window;
+        int               default_screen;
 };
 
 static void _amp_backend_x11_disconnect(struct amp_backend* backend);
@@ -43,8 +44,8 @@ amp_backend_connect(void)
         struct amp_backend* backend = malloc(sizeof(*backend));
         if (!backend)
         {
-            AMP_LOGGER_ERROR("Dynamic memory allocation error");
-            exit(EXIT_FAILURE);
+                AMP_LOGGER_ERROR("Dynamic memory allocation error");
+                exit(EXIT_FAILURE);
         }
 
         backend->display = XOpenDisplay(NULL);
@@ -101,16 +102,18 @@ amp_backend_start(struct amp_backend* backend)
         return 0;
 }
 
-void amp_backend_stop(struct amp_backend* backend)
+void
+amp_backend_stop(struct amp_backend* backend)
 {
         backend->connected = 0;
 }
 
-void _amp_backend_x11_disconnect(struct amp_backend* backend)
+void
+_amp_backend_x11_disconnect(struct amp_backend* backend)
 {
-    XCloseDisplay(backend->display);
-    free(backend);
-    AMP_LOGGER_INFO("Disconnected");
+        XCloseDisplay(backend->display);
+        free(backend);
+        AMP_LOGGER_INFO("Disconnected");
 }
 
 static int
