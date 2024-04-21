@@ -7,7 +7,6 @@
 
 #include <signal.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 #define ASYNC_SIGNAL_SAFE volatile sig_atomic_t
 #define ROOT_WINDOW_INPUT_MASK                                                                                         \
