@@ -85,4 +85,8 @@ amp_logger_close(void)
         {
                 fclose(logger.fp);
         }
+        else
+        {
+                printf("%s", COLOR_RESET);
+        }
 }

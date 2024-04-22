@@ -18,22 +18,6 @@ static enum log_level level = LOG_INFO;
 #define LOG_FILE "logs.txt"
 #endif
 
-static void
-_init_logger(void)
-{
-#ifdef DEBUG
-        amp_logger_init(level, stdout);
-#else
-
-        FILE* fp = fopen(LOG_FILE, "w");
-        if (fp)
-        {
-                amp_logger_init(level, fp);
-        }
-        return fp;
-#endif
-}
-
 static bool
 _should_exit(int signal)
 {
@@ -81,7 +65,16 @@ main(void)
 {
         struct sigaction sa;
 
-        _init_logger();
+#ifdef DEBUG
+        amp_logger_init(level, stdout);
+#else
+
+        FILE* fp = fopen(LOG_FILE, "w");
+        if (fp)
+        {
+                amp_logger_init(level, fp);
+        }
+#endif
 
         memset(&sa, 0x0, sizeof(sa));
         sa.sa_handler = _signal_handler;

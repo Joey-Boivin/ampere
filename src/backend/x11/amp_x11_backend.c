@@ -87,7 +87,7 @@ amp_backend_start(struct amp_backend* backend)
                 return -1;
         }
 
-        while (backend->connected && XNextEvent(backend->display, &event) != 0)
+        while (backend->connected && XNextEvent(backend->display, &event) == 0)
         {
                 if (_amp_backend_x11_handle_event[event.type])
                 {
