@@ -77,3 +77,16 @@ amp_logger_log(enum log_level level, const char* file, int line, const char* for
                 printf("%s", COLOR_RESET);
         }
 }
+
+void
+amp_logger_close(void)
+{
+        if (logger.fp != stdout)
+        {
+                fclose(logger.fp);
+        }
+        else
+        {
+                printf("%s", COLOR_RESET);
+        }
+}
