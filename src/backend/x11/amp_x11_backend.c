@@ -19,18 +19,19 @@ struct amp_backend
         Display*          display;
         Window            root_window;
         int               default_screen;
+        struct amp_wm* wm;
 };
 
 static void _amp_backend_x11_disconnect(struct amp_backend* backend);
 static int  _amp_backend_x11_handle_error(Display* display, XErrorEvent* err);
 static void _amp_backend_x11_try_connect(const struct amp_backend* backend);
 
-static void _amp_backend_x11_handle_key_press(XEvent* evt);
-static void _amp_backend_x11_handle_configure_request(XEvent* evt);
-static void _amp_backend_x11_handle_unmap_notify(XEvent* evt);
-static void _amp_backend_x11_handle_map_request(XEvent* evt);
+static void _amp_backend_x11_handle_key_press(struct amp_wm* wm, XEvent* evt);
+static void _amp_backend_x11_handle_configure_request(struct amp_wm* wm, XEvent* evt);
+static void _amp_backend_x11_handle_unmap_notify(struct amp_wm* wm, XEvent* evt);
+static void _amp_backend_x11_handle_map_request(struct amp_wm* wm, XEvent* evt);
 
-static void (*_amp_backend_x11_handle_event[LASTEvent])(XEvent*) = {
+static void (*_amp_backend_x11_handle_event[LASTEvent])(struct amp_wm*, XEvent*) = {
     [KeyPress]         = _amp_backend_x11_handle_key_press,
     [ConfigureRequest] = _amp_backend_x11_handle_configure_request,
     [UnmapNotify]      = _amp_backend_x11_handle_unmap_notify,
@@ -38,7 +39,7 @@ static void (*_amp_backend_x11_handle_event[LASTEvent])(XEvent*) = {
 };
 
 struct amp_backend*
-amp_backend_connect(void)
+amp_backend_connect(struct amp_wm* wm)
 {
         struct amp_backend* backend = malloc(sizeof(*backend));
         if (!backend)
@@ -72,7 +73,8 @@ amp_backend_connect(void)
             .event.ready_event = ready,
         };
 
-        amp_wm_push_event(&event);
+        backend->wm = wm;
+        amp_wm_push_event(backend->wm, &event);
 
         return backend;
 }
@@ -91,7 +93,7 @@ amp_backend_start(struct amp_backend* backend)
         {
                 if (_amp_backend_x11_handle_event[event.type])
                 {
-                        _amp_backend_x11_handle_event[event.type](&event);
+                        _amp_backend_x11_handle_event[event.type](backend->wm, &event);
                 }
         }
 
@@ -145,7 +147,7 @@ _amp_backend_x11_try_connect(const struct amp_backend* backend)
 }
 
 static void
-_amp_backend_x11_handle_key_press(XEvent* evt)
+_amp_backend_x11_handle_key_press(struct amp_wm* wm, XEvent* evt)
 {
         AMP_LOGGER_INFO("%s", "Key pressed");
         struct amp_backend_event_key_pressed key_pressed = {
@@ -159,11 +161,11 @@ _amp_backend_x11_handle_key_press(XEvent* evt)
             .event.key_pressed_event = key_pressed,
         };
 
-        amp_wm_push_event(&event);
+        amp_wm_push_event(wm, &event);
 }
 
 static void
-_amp_backend_x11_handle_configure_request(XEvent* evt)
+_amp_backend_x11_handle_configure_request(struct amp_wm* wm, XEvent* evt)
 {
         AMP_LOGGER_INFO("%s", "Configure request");
         XWindowChanges changes;
@@ -180,7 +182,7 @@ _amp_backend_x11_handle_configure_request(XEvent* evt)
 }
 
 static void
-_amp_backend_x11_handle_unmap_notify(XEvent* evt)
+_amp_backend_x11_handle_unmap_notify(struct amp_wm* wm, XEvent* evt)
 {
         AMP_LOGGER_INFO("%s", "Unmap notify");
         struct amp_backend_event_remove_window remove_window = {
@@ -193,11 +195,11 @@ _amp_backend_x11_handle_unmap_notify(XEvent* evt)
             .event.window_remove_event = remove_window,
         };
 
-        amp_wm_push_event(&event);
+        amp_wm_push_event(wm, &event);
 }
 
 static void
-_amp_backend_x11_handle_map_request(XEvent* evt)
+_amp_backend_x11_handle_map_request(struct amp_wm* wm, XEvent* evt)
 {
         AMP_LOGGER_INFO("%s", "Map request");
         struct amp_backend_event_create_window create_window = {
@@ -210,5 +212,5 @@ _amp_backend_x11_handle_map_request(XEvent* evt)
             .event.window_create_event = create_window,
         };
 
-        amp_wm_push_event(&event);
+        amp_wm_push_event(wm, &event);
 }

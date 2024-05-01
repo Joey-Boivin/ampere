@@ -11,7 +11,8 @@ enum amp_backend_event_type
         EVENT_KEY_PRESSED,
         EVENT_WINDOW_CREATE,
         EVENT_WINDOW_REMOVED,
-        EVENT_FOCUS_IN
+        EVENT_FOCUS_IN,
+        EVENT_TYPE_END
 };
 
 struct amp_backend_event_ready

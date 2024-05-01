@@ -1,5 +1,6 @@
 #include "amp_backend.h"
 #include "amp_logger.h"
+#include "amp_wm.h"
 
 #include <signal.h>
 #include <stdbool.h>
@@ -7,6 +8,7 @@
 #include <string.h>
 
 static struct amp_backend* backend;
+static struct amp_wm* wm;
 
 #define DEBUG
 
@@ -82,7 +84,8 @@ main(void)
         _init_quit_signal(&sa);
         _init_termination_signal(&sa);
 
-        backend = amp_backend_connect();
+        wm = amp_wm_init();
+        backend = amp_backend_connect(wm);
         amp_backend_start(backend); /* blocking until abnormal signal is received */
         amp_logger_close();
 
