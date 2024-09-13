@@ -8,7 +8,7 @@
 #include <string.h>
 
 static struct amp_backend* backend;
-static struct amp_wm* wm;
+static struct amp_wm*      wm;
 
 #define DEBUG
 
@@ -84,7 +84,7 @@ main(void)
         _init_quit_signal(&sa);
         _init_termination_signal(&sa);
 
-        wm = amp_wm_init();
+        wm      = amp_wm_init();
         backend = amp_backend_connect(wm);
         amp_backend_start(backend); /* blocking until abnormal signal is received */
         amp_logger_close();

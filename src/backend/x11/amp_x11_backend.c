@@ -19,7 +19,7 @@ struct amp_backend
         Display*          display;
         Window            root_window;
         int               default_screen;
-        struct amp_wm* wm;
+        struct amp_wm*    wm;
 };
 
 static void _amp_backend_x11_disconnect(struct amp_backend* backend);
